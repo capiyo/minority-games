@@ -122,7 +122,6 @@ pub fn simulate(config: SimulationConfig) -> Result<SimulationResult, Simulation
 
     for round in 0..config.rounds {
         let mut actions = Vec::with_capacity(config.agents);
-        let mut selected_indices = Vec::with_capacity(config.agents);
         let mut attendance = 0i64;
 
         for (agent_index, agent) in agents.iter().enumerate() {
@@ -132,7 +131,6 @@ pub fn simulate(config: SimulationConfig) -> Result<SimulationResult, Simulation
                 .expect("validated non-empty strategy set");
             let action = agent.strategies[best].actions[history];
             actions.push(action);
-            selected_indices.push(best);
             attendance += i64::from(action);
             selected.insert((agent_index, best));
         }
@@ -169,7 +167,6 @@ pub fn simulate(config: SimulationConfig) -> Result<SimulationResult, Simulation
         minority_share_sum += minority_count as f64 / config.agents as f64;
         entropy_sum += entropy;
         history = ((history << 1) | usize::from(minority_side == 1)) & (states - 1);
-        let _ = selected_indices;
     }
 
     let n = config.rounds as f64;
