@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Minority Games",
+    "slug": "minority-games",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true
+  }
+}
