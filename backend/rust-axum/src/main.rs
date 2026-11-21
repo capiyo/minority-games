@@ -1,4 +1,4 @@
-use axum::{extract::Path, http::StatusCode, routing::{get, post}, Json, Router};
+use axum::{http::StatusCode, routing::{get, post}, Json, Router};
 use minority_vector_engine::{simulate, SimulationConfig, SimulationResult};
 use serde::Serialize;
 use std::{env, net::SocketAddr};
@@ -20,14 +20,6 @@ async fn run_simulation(
             Json(ErrorResponse { error: error.to_string() })))
 }
 
-async fn simulation_info(Path(id): Path<String>) -> Json<serde_json::Value> {
-    Json(serde_json::json!({
-        "simulation_id": id,
-        "status": "not_persisted",
-        "message": "This endpoint becomes available when the persistence adapter is enabled."
-    }))
-}
-
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt()
@@ -37,7 +29,7 @@ async fn main() {
     let app = Router::new()
         .route("/health", get(health))
         .route("/api/v1/simulations", post(run_simulation))
-        .route("/api/v1/simulations/:id", get(simulation_info));
+        .route("/api/v1/simulations", post(run_simulation));
 
     let address: SocketAddr = env::var("MINORITY_AXUM_ADDR")
         .unwrap_or_else(|_| "127.0.0.1:8081".to_string())
