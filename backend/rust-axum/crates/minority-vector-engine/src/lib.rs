@@ -33,7 +33,7 @@ pub struct RoundObservation {
 pub struct SimulationMetrics {
     pub mean_attendance: f64,
     pub volatility: f64,
-    pub minority_win_rate: f64,
+    pub mean_minority_share: f64,
     pub mean_absolute_attendance: f64,
     pub strategy_diversity: f64,
     pub mean_action_entropy: f64,
@@ -114,6 +114,7 @@ pub fn simulate(config: SimulationConfig) -> Result<SimulationResult, Simulation
     let mut attendance_sq_sum = 0.0;
     let mut abs_sum = 0.0;
     let mut polarization_sum = 0.0;
+    let mut minority_share_sum = 0.0;
     let mut entropy_sum = 0.0;
     let mut selected = std::collections::BTreeSet::<(usize, usize)>::new();
 
@@ -167,6 +168,7 @@ pub fn simulate(config: SimulationConfig) -> Result<SimulationResult, Simulation
         attendance_sq_sum += (attendance as f64).powi(2);
         abs_sum += attendance.unsigned_abs() as f64;
         polarization_sum += polarization;
+        minority_share_sum += minority_count as f64 / config.agents as f64;
         entropy_sum += entropy;
         history = ((history << 1) | usize::from(minority_side == 1)) & (states - 1);
         let _ = selected_indices;
@@ -179,7 +181,7 @@ pub fn simulate(config: SimulationConfig) -> Result<SimulationResult, Simulation
     let metrics = SimulationMetrics {
         mean_attendance: mean,
         volatility: variance.sqrt(),
-        minority_win_rate: 1.0,
+        mean_minority_share: minority_share_sum / n,
         mean_absolute_attendance: abs_sum / n,
         strategy_diversity: selected.len() as f64 / diversity_denominator,
         mean_action_entropy: entropy_sum / n,
