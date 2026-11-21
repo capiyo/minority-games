@@ -1,0 +1,14 @@
+{
+  "name": "minority-games",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev:web": "pnpm --filter @minority/web dev",
+    "build:web": "pnpm --filter @minority/web build",
+    "dev:mobile": "pnpm --filter @minority/mobile start"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}

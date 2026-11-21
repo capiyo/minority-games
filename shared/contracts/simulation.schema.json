@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://minority-games.local/contracts/simulation.schema.json",
+  "title": "Minority Game Simulation Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agents", "memory", "strategies_per_agent", "rounds", "seed"],
+  "properties": {
+    "agents": { "type": "integer", "minimum": 3, "maximum": 10001, "description": "Odd population size" },
+    "memory": { "type": "integer", "minimum": 1, "maximum": 16 },
+    "strategies_per_agent": { "type": "integer", "minimum": 2, "maximum": 16 },
+    "rounds": { "type": "integer", "minimum": 1, "maximum": 100000 },
+    "seed": { "type": "integer", "minimum": 0 }
+  }
+}

@@ -1,0 +1,29 @@
+openapi: 3.1.0
+info:
+  title: Minority Games API
+  version: 0.1.0
+  description: Reproducible population-game simulations. Axum owns all simulation logic.
+servers:
+  - url: http://127.0.0.1:8081
+paths:
+  /health:
+    get:
+      summary: Service health
+      responses:
+        "200":
+          description: Healthy
+  /api/v1/simulations:
+    post:
+      summary: Run a deterministic simulation
+      description: Executes the authoritative Rust vector engine for the supplied seed and parameters.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./simulation.schema.json"
+      responses:
+        "200":
+          description: Simulation result and round observations
+        "422":
+          description: Invalid simulation configuration
