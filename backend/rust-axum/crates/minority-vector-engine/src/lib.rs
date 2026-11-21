@@ -64,6 +64,8 @@ pub enum SimulationError {
     InvalidStrategyCount,
     #[error("rounds must be in 1..=100000")]
     InvalidRounds,
+    #[error("configuration exceeds the simulation work budget")]
+    WorkloadTooLarge,
 }
 
 #[derive(Clone)]
@@ -137,11 +139,7 @@ pub fn simulate(config: SimulationConfig) -> Result<SimulationResult, Simulation
 
         // Odd population guarantees a non-zero attendance and a unique minority side.
         let minority_side = if attendance > 0 { -1 } else { 1 };
-        let minority_count = if minority_side == 1 {
-            ((config.agents as i64 + attendance) / 2) as usize
-        } else {
-            ((config.agents as i64 - attendance) / 2) as usize
-        };
+        let minority_count = ((config.agents as i64 - attendance.abs()) / 2) as usize;
 
         for agent in &mut agents {
             for strategy in &mut agent.strategies {
@@ -207,6 +205,15 @@ fn validate(config: &SimulationConfig) -> Result<(), SimulationError> {
     if !(1..=100_000).contains(&config.rounds) {
         return Err(SimulationError::InvalidRounds);
     }
+    let strategy_cells = config.agents.checked_mul(config.strategies_per_agent)
+        .and_then(|value| value.checked_mul(1usize << config.memory))
+        .unwrap_or(usize::MAX);
+    let scoring_work = config.agents.checked_mul(config.strategies_per_agent)
+        .and_then(|value| value.checked_mul(config.rounds))
+        .unwrap_or(usize::MAX);
+    if strategy_cells > 20_000_000 || scoring_work > 50_000_000 {
+        return Err(SimulationError::WorkloadTooLarge);
+    }
     Ok(())
 }
 
@@ -229,6 +236,12 @@ mod tests {
         let result = simulate(SimulationConfig::default()).unwrap();
         assert!(result.observations.iter().all(|r| r.attendance.abs() % 2 == 1));
         assert!(result.observations.iter().all(|r| r.minority_count < 51));
+    }
+
+    #[test]
+    fn rejects_excessive_workload() {
+        let config = SimulationConfig { agents: 10_001, memory: 16, strategies_per_agent: 16, rounds: 100_000, seed: 1 };
+        assert_eq!(simulate(config).unwrap_err(), SimulationError::WorkloadTooLarge);
     }
 
     #[test]
