@@ -30,7 +30,6 @@ async fn main() {
     let app = Router::new()
         .route("/health", get(health))
         .route("/api/v1/simulations", post(run_simulation))
-        .route("/api/v1/simulations", post(run_simulation))
         .layer(CorsLayer::permissive());
 
     let address: SocketAddr = env::var("MINORITY_AXUM_ADDR")
