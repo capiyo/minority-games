@@ -166,7 +166,8 @@ pub fn simulate(config: SimulationConfig) -> Result<SimulationResult, Simulation
         polarization_sum += polarization;
         minority_share_sum += minority_count as f64 / config.agents as f64;
         entropy_sum += entropy;
-        history = ((history << 1) | if minority_side == 1 { 1 } else { 0 }) & (states - 1);
+        let history_bit = if minority_side == 1 { 1 } else { 0 };
+        history = ((history << 1) | history_bit) & (states - 1);
     }
 
     let n = config.rounds as f64;
