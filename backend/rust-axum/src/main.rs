@@ -3,6 +3,7 @@ use minority_vector_engine::{simulate, SimulationConfig, SimulationResult};
 use serde::Serialize;
 use std::{env, net::SocketAddr};
 use tracing_subscriber::EnvFilter;
+use tower_http::cors::CorsLayer;
 
 #[derive(Serialize)]
 struct ErrorResponse {
@@ -29,7 +30,8 @@ async fn main() {
     let app = Router::new()
         .route("/health", get(health))
         .route("/api/v1/simulations", post(run_simulation))
-        .route("/api/v1/simulations", post(run_simulation));
+        .route("/api/v1/simulations", post(run_simulation))
+        .layer(CorsLayer::permissive());
 
     let address: SocketAddr = env::var("MINORITY_AXUM_ADDR")
         .unwrap_or_else(|_| "127.0.0.1:8081".to_string())
