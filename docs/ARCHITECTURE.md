@@ -13,6 +13,8 @@ The Rust domain engine is the only authority for game mathematics and state tran
 5. **React web / React Native:** clients configure experiments and visualize returned observations. They never calculate authoritative outcomes.
 6. **Shared contracts:** OpenAPI and JSON Schema define stable request/response boundaries.
 
+The Axum API currently enables permissive CORS for local web-console development. Restrict allowed origins before any public deployment. The MongoDB persistence adapter is not yet implemented; initial simulations are in-memory.
+
 ## Data flow
 
 `Client -> Drogon (optional) -> Axum -> Vector Engine -> Axum -> MongoDB (when enabled) -> Client`
