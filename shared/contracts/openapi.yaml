@@ -27,15 +27,3 @@ paths:
           description: Simulation result and round observations
         "422":
           description: Invalid simulation configuration
-  /api/v1/simulations/{id}:
-    get:
-      summary: Reserved for persisted simulation lookup
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        "501":
-          description: Persistence is not enabled in the initial milestone
