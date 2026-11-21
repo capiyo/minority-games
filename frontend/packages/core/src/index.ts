@@ -17,7 +17,7 @@ export interface RoundObservation {
 export interface SimulationMetrics {
   mean_attendance: number;
   volatility: number;
-  minority_win_rate: number;
+  mean_minority_share: number;
   mean_absolute_attendance: number;
   strategy_diversity: number;
   mean_action_entropy: number;
