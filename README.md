@@ -6,7 +6,7 @@ This repository adopts Qoin's separation of concerns: a pure Rust decision/simul
 
 ## Initial implementation
 
-The first milestone is a reproducible, seeded simulation engine and an Axum API. The engine is deterministic for a given configuration and seed. It reports round-level attendance and minority outcomes plus aggregate volatility, minority-win rate, strategy diversity and attendance distribution.
+The first milestone is a reproducible, seeded simulation engine and an Axum API. The engine is deterministic for a given configuration and seed. It reports round-level attendance and minority outcomes plus aggregate volatility, average minority share, strategy diversity and attendance distribution.
 
 ## Architecture
 
@@ -40,10 +40,20 @@ cargo run -p minority-api
 
 The API listens on `127.0.0.1:8081` by default. Set `MINORITY_AXUM_ADDR` to change the bind address.
 
+## Run the web research console
+
+```bash
+pnpm install
+pnpm dev:web
+```
+
+Set `VITE_API_URL` when the API is not at `http://127.0.0.1:8081`. The mobile client reads `EXPO_PUBLIC_API_URL`.
+
 ## Validate
 
 ```bash
 cargo test --workspace
+pnpm build:web
 ```
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/MATHEMATICAL_MODEL.md](docs/MATHEMATICAL_MODEL.md) before extending the engine.
